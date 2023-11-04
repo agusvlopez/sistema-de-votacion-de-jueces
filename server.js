@@ -1,6 +1,10 @@
 import express from 'express';
-import GamesRoute from './routes/games.js'
+import GamesRoute from './routes/games.js';
+import GamesVotesRoute from './routes/gamesVotes.js';
+import JudgesRoute from './routes/judges.js';
 import fs from 'fs';
+import mongoose from 'mongoose';
+import Votes from './models/votes.mjs'
 // import path from 'node:path';
 
 //Creamos el servidor
@@ -27,6 +31,9 @@ const app = express();
 app.use(express.json()); //interpreta el body cuando viene un JSON.
 
 app.use(GamesRoute);
+app.use(GamesVotesRoute);
+app.use(JudgesRoute);
+
 
 // let games = [];
 // //POST

@@ -4,6 +4,7 @@ import { MongoClient, ObjectId } from "mongodb";
 const client = new MongoClient('mongodb://127.0.0.1:27017');
 const db = client.db("goto_game_jam");
 const GameCollection = db.collection('games');
+const VotesCollection = db.collection('games_votes');
 
 //en el momento que hacemos algo con la coleccion(en este caso utilizando la constante ProductCollection), recién ahi se conecta a la bbdd
 
@@ -67,17 +68,8 @@ async function createGame(game){
 
 async function updateGameByID(id, updateData){
 
-    // await client.connect();
-    // const oldGame = GameCollection.findOne({_id: new ObjectId(id)});
-    // console.log(oldGame);
-    // const newGame = { ...game};
-
-    // const finalGame = await GameCollection.updateOne(id, { $set: newGame });
-
-    // return finalGame;
     await client.connect();
 
-    // Realiza la actualización parcial usando updateOne
     const result = await GameCollection.updateOne({ _id: new ObjectId(id) }, { $set: updateData });
 
     if (result.matchedCount === 1) {
@@ -90,7 +82,6 @@ async function updateGameByID(id, updateData){
 async function replaceGameByID(id, replacedData) {
     await client.connect();
 
-    // Realiza la actualización completa utilizando replaceOne
     const result = await GameCollection.replaceOne({ _id: new ObjectId(id) }, replacedData);
 
     if (result.matchedCount === 1) {
@@ -105,7 +96,8 @@ export {
     getGameByID,
     createGame,
     updateGameByID,
-    replaceGameByID
+    replaceGameByID,
+ 
 }
 
 export default {
@@ -113,5 +105,6 @@ export default {
     getGameByID,
     createGame,
     updateGameByID,
-    replaceGameByID
+    replaceGameByID,
+  
 }

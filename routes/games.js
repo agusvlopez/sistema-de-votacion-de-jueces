@@ -14,6 +14,8 @@ route.post('/games', GamesController.createGame);
 route.get('/games/:idGame', GamesController.getGameByID);
 route.patch('/games/:idGame', GamesController.updateGameByID);
 route.put('/games/:idGame', GamesController.replaceGameByID);
+
+// route.get('/games/:edition', GamesController.getSortedGames);
 // route.use('/games/', ProductsReviewRoute);
 //exportamos la ruta
 export default route;

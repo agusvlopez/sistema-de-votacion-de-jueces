@@ -82,22 +82,14 @@ async function replaceGameByID(req, res) {
             }
         });
 }
-// async function updateGameByID(req,res){
-//     return GamesService.updateGameByID(req.body)
-//     .then(function(game){
-//      res.status(201).json(game)
-//     })
-//     .catch(function(err){
-//      res.status(500).json({ msg: err.msg });
-//     })
-//  }
 
 export {
     getGames,
     getGameByID,
     createGame,
     updateGameByID,
-    replaceGameByID
+    replaceGameByID,
+
 }
 
 export default{
@@ -105,5 +97,6 @@ export default{
     getGameByID,
     createGame,
     updateGameByID,
-    replaceGameByID
+    replaceGameByID,
+   
 }
