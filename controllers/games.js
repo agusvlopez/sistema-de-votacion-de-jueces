@@ -39,6 +39,26 @@ function getGameByID(req,res){
     })
 }
 
+function getGameByEdition(req,res){
+    //obtengo el valor a traves de los params, puede ser de las dos siguientes formas:
+    //const idProduct = req.params.idProduct;
+    const {edition} = req.params;
+    
+    GamesService.getGameByEdition(edition)
+    .then(function(game){
+        return res.status(200).json(game)
+    })
+    .catch(function(err){
+        if(err?.code){
+            res.status(err.code).json({msg: err.msg});
+        }
+        else {
+            res.status(500).json({msg: "No se pudo obtener el archivo"});
+        }
+
+    })
+}
+
 async function createGame(req,res){
    return GamesService.createGame(req.body)
    .then(function(game){
@@ -83,13 +103,25 @@ async function replaceGameByID(req, res) {
         });
 }
 
+const getGamesSortedByScore = async (req, res) => {
+    try {
+        const { edition } = req.params;
+      const games = await GamesService.getGamesSortedByScore(parseInt(edition));
+      res.json(games);
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'No se pudieron obtener los juegos ordenados por puntaje' });
+    }
+  };
+
 export {
     getGames,
     getGameByID,
     createGame,
     updateGameByID,
     replaceGameByID,
-
+    getGameByEdition,
+    getGamesSortedByScore
 }
 
 export default{
@@ -98,5 +130,6 @@ export default{
     createGame,
     updateGameByID,
     replaceGameByID,
-   
+    getGameByEdition,
+    getGamesSortedByScore
 }

@@ -1,5 +1,5 @@
 //Nos brinda toda la info que tiene que ver con la carga o datos de un producto
-import { MongoClient, ObjectId } from "mongodb";
+import { Int32, MongoClient, ObjectId } from "mongodb";
 
 const client = new MongoClient('mongodb://127.0.0.1:27017');
 const db = client.db("goto_game_jam");
@@ -56,6 +56,11 @@ async function getGameByID(id){
     return GameCollection.findOne({_id: new ObjectId(id)});
 }
 
+async function getGameByEdition(edition){
+    await client.connect();
+    return GameCollection.find({edition: Int32(edition)});
+}
+
 async function createGame(game){
 
     await client.connect();
@@ -91,13 +96,76 @@ async function replaceGameByID(id, replacedData) {
     }
 }
 
+
+// const getGamesSortedByScore = async (edition) => {
+
+//   await client.connect();
+//     const games = await GameCollection.find({edition: edition}).toArray();
+//     // console.log(games);
+
+//     const votesGames = games.forEach(async (game) => {
+//         const votes = await VotesCollection.find({game_id: game._id }).toArray(); 
+//         // console.log(votes);
+//         return votes;
+//     });
+        
+//     const scores = votesGames.forEach(async (vote) => {
+//         vote.score = await vote.Jugabilidad + vote.Arte + vote.Sonido + vote.Tematica; 
+//         console.log(scores);
+//     });
+
+   
+//     const gamesSorted = scores.sort((a, b) => b.score - a.score);
+  
+
+//     client.close();
+
+//     return gamesSorted;
+   
+    
+// };
+const getGamesSortedByScore = async (edition) => {
+    try {
+      await client.connect();
+      const games = await GameCollection.find({ edition: edition }).toArray();
+      
+      const votesPromises = games.map(async (game) => {
+        const votes = await VotesCollection.find({ game_id: game._id }).toArray();
+        game.votes = votes; // Asociar los votos al juego
+        return game;
+      });
+  
+      const gamesWithVotes = await Promise.all(votesPromises);
+      
+      gamesWithVotes.forEach((game) => {
+        game.score = game.votes.reduce((acc, vote) => acc + vote.Jugabilidad + vote.Arte + vote.Sonido + vote.Tematica, 0);
+      });
+
+     // Eliminar el campo 'votes' de cada juego
+        gamesWithVotes.forEach((game) => {
+            delete game.votes;
+        });
+
+      const gamesSorted = gamesWithVotes.sort((a, b) => b.score - a.score);
+  
+      client.close();
+  
+      return gamesSorted;
+      
+    } catch (error) {
+      console.error('Error:', error);
+      throw error; // Puedes lanzar el error para que sea manejado en un catch posterior
+    }
+  };
+  
 export {
     getGames,
     getGameByID,
     createGame,
     updateGameByID,
     replaceGameByID,
- 
+    getGameByEdition,
+    getGamesSortedByScore
 }
 
 export default {
@@ -106,5 +174,6 @@ export default {
     createGame,
     updateGameByID,
     replaceGameByID,
-  
+    getGameByEdition,
+    getGamesSortedByScore
 }
