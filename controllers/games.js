@@ -26,6 +26,7 @@ function getGameByID(req,res){
     
     GamesService.getGameByID(idGame)
     .then(function(game){
+        console.log(game);
         return res.status(200).json(game)
     })
     .catch(function(err){
@@ -106,14 +107,25 @@ async function replaceGameByID(req, res) {
 const getGamesSortedByScore = async (req, res) => {
     try {
         const { edition } = req.params;
-      const games = await GamesService.getGamesSortedByScore(parseInt(edition));
-      res.json(games);
+        const games = await GamesService.getGamesSortedByScore(parseInt(edition));
+        res.json(games);
     } catch (error) {
       console.error('Error:', error);
       res.status(500).json({ error: 'No se pudieron obtener los juegos ordenados por puntaje' });
     }
   };
 
+  const getGamesByGenre = async (req, res) => {
+    try {
+        const { edition } = req.params;
+        const { genre } = req.params;
+        const games = await GamesService.getGamesByGenre(parseInt(edition), genre);
+        res.json(games);
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'No se pudieron obtener los juegos ordenados por puntaje' });
+    }
+  };
 export {
     getGames,
     getGameByID,
@@ -121,7 +133,8 @@ export {
     updateGameByID,
     replaceGameByID,
     getGameByEdition,
-    getGamesSortedByScore
+    getGamesSortedByScore,
+    getGamesByGenre
 }
 
 export default{
@@ -131,5 +144,6 @@ export default{
     updateGameByID,
     replaceGameByID,
     getGameByEdition,
-    getGamesSortedByScore
+    getGamesSortedByScore,
+    getGamesByGenre
 }

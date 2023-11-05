@@ -53,7 +53,34 @@ async function getGames(filter = {}) {
 
 async function getGameByID(id){
     await client.connect();
-    return GameCollection.findOne({_id: new ObjectId(id)});
+
+    const game = await GameCollection.findOne({_id: new ObjectId(id)});
+  
+    const votes = await VotesCollection.find({ game_id: new ObjectId(id) }).toArray();
+
+    let jugabilidad = 0;
+    let arte = 0;
+    let sonido = 0;
+    let tematica = 0;  
+   
+    votes.forEach(g => {
+        jugabilidad += g.Jugabilidad;
+        arte += g.Arte;
+        sonido += g.Sonido;
+        tematica += g.Tematica;
+          
+    }) 
+    const object = {
+            ...game,
+            jugabilidad: jugabilidad/(votes.length),
+            arte: arte/(votes.length),
+            sonido: sonido/(votes.length),
+            tematica: tematica/(votes.length),
+    }
+
+    console.log(game);
+    
+   return object
 }
 
 async function getGameByEdition(edition){
@@ -141,7 +168,7 @@ const getGamesSortedByScore = async (edition) => {
         game.score = game.votes.reduce((acc, vote) => acc + vote.Jugabilidad + vote.Arte + vote.Sonido + vote.Tematica, 0);
       });
 
-     // Eliminar el campo 'votes' de cada juego
+      // Eliminar el campo 'votes' de cada juego
         gamesWithVotes.forEach((game) => {
             delete game.votes;
         });
@@ -149,7 +176,7 @@ const getGamesSortedByScore = async (edition) => {
       const gamesSorted = gamesWithVotes.sort((a, b) => b.score - a.score);
   
       client.close();
-  
+        console.log("mee stoy ejecutando: ", gamesSorted);
       return gamesSorted;
       
     } catch (error) {
@@ -157,7 +184,23 @@ const getGamesSortedByScore = async (edition) => {
       throw error; // Puedes lanzar el error para que sea manejado en un catch posterior
     }
   };
-  
+
+  async function getGamesByGenre(edition, genre){
+    try {
+        const sortedGames = await getGamesSortedByScore(edition)
+
+        const gamesGenres = sortedGames.filter((game) => {
+            return game.genre == genre;
+        });
+        
+        return gamesGenres;
+
+    } catch (error) {
+    console.error('Error:', error);
+    throw error; // Puedes lanzar el error para que sea manejado en un catch posterior
+  }
+  }
+
 export {
     getGames,
     getGameByID,
@@ -165,7 +208,8 @@ export {
     updateGameByID,
     replaceGameByID,
     getGameByEdition,
-    getGamesSortedByScore
+    getGamesSortedByScore,
+    getGamesByGenre
 }
 
 export default {
@@ -175,5 +219,6 @@ export default {
     updateGameByID,
     replaceGameByID,
     getGameByEdition,
-    getGamesSortedByScore
+    getGamesSortedByScore,
+    getGamesByGenre
 }
