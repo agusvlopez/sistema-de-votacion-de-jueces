@@ -79,11 +79,17 @@ async function findVotesByGame(idGame){
 async function createVote(idGame, idJudge, vote) { 
     await client.connect();
     try {
-
+        const game = await GameCollection.findOne({ _id: new ObjectId(idGame) }); // Busca el juego por su ID
+        const judge = await JudgesCollection.findOne({ _id: new ObjectId(idJudge) }); // Busca el juez por su ID
+        
+        if (!game || !judge) {
+            throw error;
+        }
+        
         const newVote = {
             ...vote,
-            game_id: new ObjectId(idGame),
-            judge_id: new ObjectId(idJudge)
+            game_name: game.name,
+            judge_name: judge.name,
         }
 
         const votesByJudge = await findVotesByJudge(idJudge);

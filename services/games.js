@@ -124,64 +124,52 @@ async function replaceGameByID(id, replacedData) {
 }
 
 
-// const getGamesSortedByScore = async (edition) => {
-
-//   await client.connect();
-//     const games = await GameCollection.find({edition: edition}).toArray();
-//     // console.log(games);
-
-//     const votesGames = games.forEach(async (game) => {
-//         const votes = await VotesCollection.find({game_id: game._id }).toArray(); 
-//         // console.log(votes);
-//         return votes;
-//     });
-        
-//     const scores = votesGames.forEach(async (vote) => {
-//         vote.score = await vote.Jugabilidad + vote.Arte + vote.Sonido + vote.Tematica; 
-//         console.log(scores);
-//     });
-
-   
-//     const gamesSorted = scores.sort((a, b) => b.score - a.score);
-  
-
-//     client.close();
-
-//     return gamesSorted;
-   
-    
-// };
-const getGamesSortedByScore = async (edition) => {
+const getGamesSortedByScore = async (edition, genre) => {
     try {
-      await client.connect();
-      const games = await GameCollection.find({ edition: edition }).toArray();
+        await client.connect();
+        const games = await GameCollection.find({ edition: edition }).toArray();
       
-      const votesPromises = games.map(async (game) => {
-        const votes = await VotesCollection.find({ game_id: game._id }).toArray();
-        game.votes = votes; // Asociar los votos al juego
-        return game;
-      });
+        const votesPromises = games.map(async (game) => {
+            const votes = await VotesCollection.find({ game_id: game._id }).toArray();
+            game.votes = votes; 
+            return game;
+        });
   
-      const gamesWithVotes = await Promise.all(votesPromises);
+        const gamesWithVotes = await Promise.all(votesPromises);
       
-      gamesWithVotes.forEach((game) => {
+        gamesWithVotes.forEach((game) => {
         game.score = game.votes.reduce((acc, vote) => acc + vote.Jugabilidad + vote.Arte + vote.Sonido + vote.Tematica, 0);
-      });
+        });
 
-      // Eliminar el campo 'votes' de cada juego
+        // Eliminar el campo 'votes' de cada juego
         gamesWithVotes.forEach((game) => {
             delete game.votes;
         });
 
-      const gamesSorted = gamesWithVotes.sort((a, b) => b.score - a.score);
-  
-      client.close();
+        const gamesSorted = gamesWithVotes.sort((a, b) => b.score - a.score);
+
+        let allGames;
+
+        if(genre){
+            allGames = gamesSorted.filter((game) => {
+                return game.genre == genre;
+            });
+            if(!allGames.length >= 1){
+                throw error;
+            }
+           console.log("dentro del gamesGenre: ", allGames);
+        }else {
+            allGames = gamesSorted;
+        }
+
+        client.close();
         console.log("mee stoy ejecutando: ", gamesSorted);
-      return gamesSorted;
+
+        return allGames;
       
     } catch (error) {
-      console.error('Error:', error);
-      throw error; // Puedes lanzar el error para que sea manejado en un catch posterior
+        console.error('Error:', error);
+        throw error; 
     }
   };
 
@@ -196,9 +184,9 @@ const getGamesSortedByScore = async (edition) => {
         return gamesGenres;
 
     } catch (error) {
-    console.error('Error:', error);
-    throw error; // Puedes lanzar el error para que sea manejado en un catch posterior
-  }
+        console.error('Error:', error);
+        throw error; 
+    }
   }
 
 export {

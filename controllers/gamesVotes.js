@@ -83,7 +83,7 @@ function createVote(req,res){
         res.json(votes)
     })
     .catch(function (err) {
-        res.status(500).json({msg: "El juez ya ha votado por este juego"})
+        res.status(500).json({msg: "No se pudo crear el voto"})
     })
 
 }
