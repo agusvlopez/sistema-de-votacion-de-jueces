@@ -1,12 +1,10 @@
-//Nos brinda toda la info que tiene que ver con la carga o datos de un producto
-import { Int32, MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 const client = new MongoClient('mongodb://127.0.0.1:27017');
 const db = client.db("goto_game_jam");
 const GameCollection = db.collection('games');
 const VotesCollection = db.collection('games_votes');
 
-//en el momento que hacemos algo con la coleccion(en este caso utilizando la constante ProductCollection), recién ahi se conecta a la bbdd
 
 function filterQueryToMongo(filter){
     const filterMongo = {};
@@ -42,6 +40,7 @@ function filterQueryToMongo(filter){
    
 }
 
+//6 GET
 async function getGames(filter = {}) {
     await client.connect();
 
@@ -50,13 +49,13 @@ async function getGames(filter = {}) {
     return GameCollection.find(filterValido).toArray();
 }
 
-
+//5:
 async function getGameByID(id){
     await client.connect();
 
     const game = await GameCollection.findOne({_id: new ObjectId(id)});
-  
-    const votes = await VotesCollection.find({ game_id: new ObjectId(id) }).toArray();
+    let gameName = game.name;
+    const votes = await VotesCollection.find({ game_name: gameName }).toArray();
 
     let jugabilidad = 0;
     let arte = 0;
@@ -68,14 +67,17 @@ async function getGameByID(id){
         arte += g.Arte;
         sonido += g.Sonido;
         tematica += g.Tematica;
-          
+        
     }) 
     const object = {
-            ...game,
-            jugabilidad: jugabilidad/(votes.length),
-            arte: arte/(votes.length),
-            sonido: sonido/(votes.length),
-            tematica: tematica/(votes.length),
+        ...game,
+        "Promedio de puntuaciones": {
+            Jugabilidad: jugabilidad/(votes.length),
+            Arte: arte/(votes.length),
+            Sonido: sonido/(votes.length),
+            Tematica: tematica/(votes.length),
+            }
+        
     }
 
     console.log(game);
@@ -83,11 +85,26 @@ async function getGameByID(id){
    return object
 }
 
-async function getGameByEdition(edition){
+//3:
+async function getGameByIDPoints(id){
     await client.connect();
-    return GameCollection.find({edition: Int32(edition)});
+
+    const game = await GameCollection.findOne({_id: new ObjectId(id)});
+    let gameName = game.name;
+    const votes = await VotesCollection.find({ game_name: gameName }).toArray();
+
+     const object = {
+         ...votes,     
+     }
+
+
+    console.log(game);
+    
+    return object
 }
 
+
+//6 POST
 async function createGame(game){
 
     await client.connect();
@@ -98,6 +115,7 @@ async function createGame(game){
     return game;
 }
 
+// 6 PATCH
 async function updateGameByID(id, updateData){
 
     await client.connect();
@@ -105,32 +123,29 @@ async function updateGameByID(id, updateData){
     const result = await GameCollection.updateOne({ _id: new ObjectId(id) }, { $set: updateData });
 
     if (result.matchedCount === 1) {
-        return { success: true, message: "Juego actualizado correctamente" };
-    } else {
-        return { success: false, message: "No se encontró el juego con el ID proporcionado" };
-    }
+        return GameCollection.findOne({_id: new ObjectId(id)});
+    } 
 }
 
+// 6 PUT
 async function replaceGameByID(id, replacedData) {
     await client.connect();
 
     const result = await GameCollection.replaceOne({ _id: new ObjectId(id) }, replacedData);
 
     if (result.matchedCount === 1) {
-        return { success: true, message: "Juego actualizado correctamente" };
-    } else {
-        return { success: false, message: "No se encontró el juego con el ID proporcionado" };
+        return GameCollection.findOne({_id: new ObjectId(id)});
     }
 }
 
-
+//4:
 const getGamesSortedByScore = async (edition, genre) => {
     try {
         await client.connect();
         const games = await GameCollection.find({ edition: edition }).toArray();
       
         const votesPromises = games.map(async (game) => {
-            const votes = await VotesCollection.find({ game_id: game._id }).toArray();
+            const votes = await VotesCollection.find({ game_name: game.name }).toArray();
             game.votes = votes; 
             return game;
         });
@@ -173,21 +188,30 @@ const getGamesSortedByScore = async (edition, genre) => {
     }
   };
 
-  async function getGamesByGenre(edition, genre){
+// 6 DELETE
+async function deleteGameByID(id){
     try {
-        const sortedGames = await getGamesSortedByScore(edition)
+            await client.connect();
+            const game = await GameCollection.findOne({ _id: new ObjectId(id) });
+        console.log(game);
+            // creamos una propiedad llamada deleted para indicar que el objeto esta eliminado 
+            game.deleted = true; 
+            const resultado = await GameCollection.deleteOne({_id: new ObjectId(game._id)});
+            console.log(resultado);
+            if (resultado.deletedCount === 1) {
+                return resultado;
+            }else{
+                throw error;
+            }
+           
+        }
 
-        const gamesGenres = sortedGames.filter((game) => {
-            return game.genre == genre;
-        });
-        
-        return gamesGenres;
-
-    } catch (error) {
+        catch (error) {
         console.error('Error:', error);
         throw error; 
     }
-  }
+
+}
 
 export {
     getGames,
@@ -195,9 +219,9 @@ export {
     createGame,
     updateGameByID,
     replaceGameByID,
-    getGameByEdition,
     getGamesSortedByScore,
-    getGamesByGenre
+    getGameByIDPoints,
+    deleteGameByID
 }
 
 export default {
@@ -206,7 +230,7 @@ export default {
     createGame,
     updateGameByID,
     replaceGameByID,
-    getGameByEdition,
     getGamesSortedByScore,
-    getGamesByGenre
+    getGameByIDPoints,
+    deleteGameByID
 }

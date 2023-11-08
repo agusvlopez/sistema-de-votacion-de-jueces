@@ -95,10 +95,11 @@ async function createVote(idGame, idJudge, vote) {
 
         const votesByJudge = await findVotesByJudge(idJudge);
         console.log("votes:", votesByJudge);
-
-        const voteExists = votesByJudge.some(async (document) => {
-            const gameID = document.game_id;
-            return gameID === idGame;
+        let gameID;
+        const voteExists = votesByJudge.some( (document) => {
+            gameID = document.game_name;
+            console.log("dentro del voteExists:" , gameID );
+            return gameID === game.name;
         });
 
         if (voteExists) {
@@ -108,7 +109,7 @@ async function createVote(idGame, idJudge, vote) {
             console.log("llegué al else");
             await GameVotesCollection.insertOne(newVote);
         }
-
+        
         return newVote;
     } catch (error) {
         throw error; // Relanza el error para que pueda manejarse en el controlador

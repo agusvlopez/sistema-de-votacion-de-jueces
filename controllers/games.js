@@ -1,10 +1,9 @@
 // Las funciones del controlador de los juegos
-
-
 import * as GamesService from "../services/games.js";
 
 // import ServiceProducts from "../services/products.js";
 
+//6 GET
 function getGames(req,res){
 
     GamesService.getGames(req.query)
@@ -19,6 +18,7 @@ function getGames(req,res){
 
 }
 
+//5:
 function getGameByID(req,res){
     //obtengo el valor a traves de los params, puede ser de las dos siguientes formas:
     //const idProduct = req.params.idProduct;
@@ -40,13 +40,13 @@ function getGameByID(req,res){
     })
 }
 
-function getGameByEdition(req,res){
-    //obtengo el valor a traves de los params, puede ser de las dos siguientes formas:
-    //const idProduct = req.params.idProduct;
-    const {edition} = req.params;
+//3:
+function getGameByIDPoints(req,res){
+    const {idGame} = req.params;
     
-    GamesService.getGameByEdition(edition)
+    GamesService.getGameByIDPoints(idGame)
     .then(function(game){
+        console.log(game);
         return res.status(200).json(game)
     })
     .catch(function(err){
@@ -60,6 +60,7 @@ function getGameByEdition(req,res){
     })
 }
 
+//6 POST
 async function createGame(req,res){
    return GamesService.createGame(req.body)
    .then(function(game){
@@ -70,6 +71,7 @@ async function createGame(req,res){
    })
 }
 
+//6 PATCH
 async function updateGameByID(req, res) {
     const { idGame } = req.params; // Obtiene el ID del juego de los parámetros de la URL
     const updateData = req.body; // Datos de actualización en el cuerpo de la solicitud
@@ -87,6 +89,7 @@ async function updateGameByID(req, res) {
         });
 }
 
+// 6 PUT
 async function replaceGameByID(req, res) {
     const { idGame } = req.params; // Obtiene el ID del juego de los parámetros de la URL
     const replacedData = req.body; // Datos de actualización en el cuerpo de la solicitud
@@ -104,7 +107,8 @@ async function replaceGameByID(req, res) {
         });
 }
 
-const getGamesSortedByScore = async (req, res) => {
+//4:
+async function getGamesSortedByScore (req, res) {
     try {
         const { edition } = req.params;
         const { genre } = req.query;
@@ -117,27 +121,34 @@ const getGamesSortedByScore = async (req, res) => {
     }
   };
 
+// 6 DELETE
+async function deleteGameByID(req,res) {
+    const {idGame} = req.params;
 
+    GamesService.deleteGameByID(idGame)
+        .then(function (game) {
+            res.status(200).json({ msg: "Juego eliminado correctamente" });
+        })
+        .catch(function (err) {
+            if (err?.code) {
+                
+                res.status(err.code).json({ msg: err.msg });
+            } else {
+                res.status(500).json({ msg: "No se pudo eliminar el juego" });
+            }
+        });
+}
   
-//   const getGamesByGenre = async (req, res) => {
-//     try {
-//         const { edition } = req.params;
-//         const { genre } = req.params;
-//         const games = await GamesService.getGamesByGenre(parseInt(edition), genre);
-//         res.json(games);
-//     } catch (error) {
-//       console.error('Error:', error);
-//       res.status(500).json({ error: 'No se pudieron obtener los juegos ordenados por puntaje' });
-//     }
-//   };
+
 export {
     getGames,
     getGameByID,
     createGame,
     updateGameByID,
     replaceGameByID,
-    getGameByEdition,
     getGamesSortedByScore,
+    getGameByIDPoints,
+    deleteGameByID
 }
 
 export default{
@@ -146,6 +157,7 @@ export default{
     createGame,
     updateGameByID,
     replaceGameByID,
-    getGameByEdition,
     getGamesSortedByScore,
+    getGameByIDPoints,
+    deleteGameByID
 }

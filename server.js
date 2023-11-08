@@ -1,36 +1,14 @@
 import express from 'express';
 import GamesRoute from './routes/games.js';
 import GamesVotesRoute from './routes/gamesVotes.js';
-import JudgesRoute from './routes/judges.js';
 
-// import path from 'node:path';
-
-//Creamos el servidor
 const app = express();
 
-// //Ejecutamos el middleware indicandole donde se encuentran los contenidos estaticos
-// app.use(express.static('public'));
-// //para avisarle a express cada vez que venga algo en url encode lo parsee a objeto y asi puede interpretarlo(siempre q venga en urlencoded)
-// app.use(express.urlencoded({extended: true}));
-
-// //Aca van todas las funciones que queremos que sean dinamicas:
-//     //asi obtenemos todo lo que viene del get
-//     //GET
-// app.get('/form', function(req,res){
-//     let nombre = req.query.nombre;
-//     res.send(`Hola ${nombre}`);
-// });
-// //POST
-// app.post('/form', function(req,res){
-//     let nombre = req.body.nombre;
-//     res.send(`Hola ${nombre}`);
-// });
 
 app.use(express.json()); //interpreta el body cuando viene un JSON.
 
 app.use(GamesRoute);
 app.use(GamesVotesRoute);
-app.use(JudgesRoute);
 
 
 // let games = [];
