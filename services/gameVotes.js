@@ -65,8 +65,9 @@ async function getJudgeByID(id){
 
 async function findVotesByJudge(idJudge){
     await client.connect();
+    const judge = await JudgesCollection.findOne({_id: new ObjectId(idJudge)});
 
-    return GameVotesCollection.find({judge_id: new ObjectId(idJudge)}).toArray();
+    return GameVotesCollection.find({judge_name: judge.name}).toArray();
 }
 
 async function findVotesByGame(idGame){
@@ -95,8 +96,8 @@ async function createVote(idGame, idJudge, vote) {
         const votesByJudge = await findVotesByJudge(idJudge);
         console.log("votes:", votesByJudge);
 
-        const voteExists = votesByJudge.some((document) => {
-            const gameID = document.game_id.toString();
+        const voteExists = votesByJudge.some(async (document) => {
+            const gameID = document.game_id;
             return gameID === idGame;
         });
 

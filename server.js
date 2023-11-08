@@ -2,9 +2,7 @@ import express from 'express';
 import GamesRoute from './routes/games.js';
 import GamesVotesRoute from './routes/gamesVotes.js';
 import JudgesRoute from './routes/judges.js';
-import fs from 'fs';
-import mongoose from 'mongoose';
-import Votes from './models/votes.mjs'
+
 // import path from 'node:path';
 
 //Creamos el servidor
