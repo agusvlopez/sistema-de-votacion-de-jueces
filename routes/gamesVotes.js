@@ -4,6 +4,8 @@ import { validateCreateVote } from '../middleware/votes.js';
 
 const route = express.Router();
 
+//Obtener la coleccion de los jueces
+route.get('/judges/', GamesVotesController.getJudges);
 //1:
 //Un juez debe poder generar una votación a un juego.
 route.post('/judges/:idJudge/votes/:idGame',[validateCreateVote], GamesVotesController.createVote);
