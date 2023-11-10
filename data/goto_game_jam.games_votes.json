@@ -1,0 +1,110 @@
+[{
+  "_id": {
+    "$oid": "654ba9e0e8a530b3d9685063"
+  },
+  "Jugabilidad": 10,
+  "Arte": 8,
+  "Sonido": 6,
+  "Tematica": 8,
+  "game_name": "Mario Bross 2",
+  "judge_name": "Luis"
+},
+{
+  "_id": {
+    "$oid": "654baa88f965f01ee48ddead"
+  },
+  "Jugabilidad": 10,
+  "Arte": 8,
+  "Sonido": 6,
+  "Tematica": 8,
+  "game_name": "Plants vs Humans",
+  "judge_name": "Laura"
+},
+{
+  "_id": {
+    "$oid": "654bab27126ed28564b4cbe6"
+  },
+  "Jugabilidad": 10,
+  "Arte": 8,
+  "Sonido": 6,
+  "Tematica": 8,
+  "game_name": "Humans vs Monsters",
+  "judge_name": "Laura"
+},
+{
+  "_id": {
+    "$oid": "654bab89565d6fc5bd08b8ff"
+  },
+  "Jugabilidad": 10,
+  "Arte": 8,
+  "Sonido": 6,
+  "Tematica": 8,
+  "game_name": "Mario Bross 2",
+  "judge_name": "Laura"
+},
+{
+  "_id": {
+    "$oid": "654bab99565d6fc5bd08b900"
+  },
+  "Jugabilidad": 10,
+  "Arte": 8,
+  "Sonido": 6,
+  "Tematica": 10,
+  "game_name": "Mario Bross 1",
+  "judge_name": "Laura"
+},
+{
+  "_id": {
+    "$oid": "654babb00ae1807031a1a77b"
+  },
+  "Jugabilidad": 10,
+  "Arte": 8,
+  "Sonido": 6,
+  "Tematica": 10,
+  "game_name": "Mario Bross: Horror",
+  "judge_name": "Laura"
+},
+{
+  "_id": {
+    "$oid": "654babc40ae1807031a1a77c"
+  },
+  "Jugabilidad": 10,
+  "Arte": 7,
+  "Sonido": 6,
+  "Tematica": 7,
+  "game_name": "Mario Bross: Horror",
+  "judge_name": "Luis"
+},
+{
+  "_id": {
+    "$oid": "654bd7934983cea6258da1f4"
+  },
+  "Jugabilidad": 10,
+  "Arte": 8,
+  "Sonido": 5,
+  "Tematica": 10,
+  "game_name": "Pick",
+  "judge_name": "María"
+},
+{
+  "_id": {
+    "$oid": "654be09e6654dc4274713680"
+  },
+  "Jugabilidad": 8,
+  "Arte": 5,
+  "Sonido": 4,
+  "Tematica": 3,
+  "game_name": "Mario Bross: Horror",
+  "judge_name": "Sofía"
+},
+{
+  "_id": {
+    "$oid": "654be0c46654dc4274713681"
+  },
+  "Jugabilidad": 8,
+  "Arte": 5,
+  "Sonido": 4,
+  "Tematica": 3,
+  "game_name": "Plants vs Humans",
+  "judge_name": "Juan"
+}]

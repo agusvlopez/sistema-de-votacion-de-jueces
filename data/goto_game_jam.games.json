@@ -1,0 +1,79 @@
+[{
+  "_id": {
+    "$oid": "65403dab9c4d67bbef859fdf"
+  },
+  "name": "Mario Bross 2",
+  "genre": "Aventura",
+  "members": [
+    "Jorge",
+    "Sarah",
+    "Julieta"
+  ],
+  "edition": 2023
+},
+{
+  "_id": {
+    "$oid": "65405256b247f9c3a792726d"
+  },
+  "name": "Plants vs Humans",
+  "genre": "Accion",
+  "members": [
+    "Jorge",
+    "Lucia",
+    "Julieta"
+  ],
+  "edition": 2023
+},
+{
+  "_id": {
+    "$oid": "6546997f796ea28efa2706fe"
+  },
+  "name": "Mario Bross 1",
+  "genre": "Aventura",
+  "members": [
+    "Jorge",
+    "Sarah",
+    "Julieta"
+  ],
+  "edition": 2021
+},
+{
+  "_id": {
+    "$oid": "65496bc00813a4b2b81ff5cc"
+  },
+  "name": "Mario Bross: Horror",
+  "genre": "Terror",
+  "members": [
+    "Jorge",
+    "Sarah",
+    "Julieta"
+  ],
+  "edition": 2019
+},
+{
+  "_id": {
+    "$oid": "654b19bf38f7b983cb6d0667"
+  },
+  "name": "Humans vs Monsters",
+  "genre": "Accion",
+  "members": [
+    "Jorge",
+    "Lucia",
+    "Julieta"
+  ],
+  "edition": 2019
+},
+{
+  "_id": {
+    "$oid": "654bc3269f6b014a289e1b85"
+  },
+  "name": "Pick",
+  "genre": "Lógica",
+  "members": [
+    "Caro",
+    "Pepe",
+    "Paula",
+    "Ana"
+  ],
+  "edition": 2021
+}]
